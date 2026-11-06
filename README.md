@@ -12,13 +12,18 @@ Escuela municipal ficticia de tiro con arco de Garopaba, Brasil. Primera versió
 
 ## Accesos y estado real
 
-- Repositorio público: pendiente de crear y verificar.
-- GitHub Projects: pendiente de crear y verificar.
-- PR revisado por un par e integrado: pendiente.
-- Documentación: propuesta preparada, pendiente de validación humana final.
+- Repositorio: https://github.com/NachoGHBP/TPI4_OE
+- GitHub Projects: https://github.com/users/NachoGHBP/projects/1/views/1
+- PR del BPMN: https://github.com/NachoGHBP/TPI4_OE/pull/1
+  - Aprobado por valenzuelagustavo con el comentario “Todo correcto.”.
+  - Integrado en main luego de la aprobación del revisor.
+- PR del backlog: https://github.com/NachoGHBP/TPI4_OE/pull/2
+  - Integrado en main.
+- Tablero: tres historias de usuario en Por hacer y la tarea documental D-03 en En Progreso.
+- Documentación de control y uso de IA: en revisión y preparación para su publicación.
 - Implementación y pruebas del piloto: no realizadas.
 
-Sustituir los pendientes por enlaces comprobados. No usar este texto como evidencia de acciones todavía no realizadas.
+Acceso público al repositorio y al tablero verificado por el estudiante el 05/11/2026, sin iniciar sesión.
 
 ## Contenido
 
@@ -29,9 +34,13 @@ Sustituir los pendientes por enlaces comprobados. No usar este texto como eviden
 - `backlog/backlog_inicial.csv`: propuesta inicial, no sustituye el tablero interactivo.
 - `evidencias/`: plantillas vacías para registros reales de control y revisión.
 
-## Flujo de trabajo previsto
+## Flujo de trabajo
 
-Crear ramas docs/bpmn, docs/backlog y docs/control. Guardar cambios mediante commits descriptivos y abrir PR hacia main. Solicitar revisión a otra persona, resolver observaciones y conservar la integración. No simular al revisor ni inventar un historial de cambios. Mantener las tres historias del producto en Por Hacer mientras no se implemente el software; registrar aparte el avance documental.
+Se utilizan las ramas docs/bpmn, docs/backlog y docs/control para organizar la documentación, con commits descriptivos y Pull Requests hacia main.
+
+El PR #1 recibió aprobación de un par, sin solicitudes de cambios. El PR #2 incorporó las historias de usuario y el backlog. La rama docs/control se encuentra en preparación.
+
+El tablero distingue las funcionalidades futuras del software de las tareas documentales. Las tres historias del producto permanecen en Por hacer porque todavía no se implementaron. La tarea D-03 registra el trabajo en curso sobre indicadores y declaración de uso de IA.
 
 ## Declaración de Uso de IA
 
@@ -42,7 +51,7 @@ Decisiones humanas verificables: modalidad individual, organización ficticia, c
 
 Durante la asistencia se revisó críticamente que una carga pendiente no sea ausencia, que el último autor no equivalga a auditoría completa, que un documento terminado no signifique software implementado y que las familias no reciban cuentas fuera de alcance. Estas revisiones asistidas no se atribuyen como correcciones humanas ya efectuadas.
 
-**Revisión humana final pendiente:** el estudiante deberá validar el contenido y completar `evidencias/revision_humana_ia.csv` con decisiones y correcciones efectivamente realizadas, sus motivos y evidencia. La responsabilidad intelectual permanece en el estudiante. No se fabricaron resultados de pruebas, revisiones de pares ni actividad de GitHub.
+**Revisión humana registrada:** el estudiante aceptó cinco criterios sobre continuidad del alcance, asistencia pendiente, permisos del instructor, indicadores propuestos y distinción entre documentación e implementación. No solicitó modificaciones sobre esos puntos. El registro se encuentra en `evidencias/revision_humana_ia.csv`. Esta aceptación no constituye una prueba del software ni una validación exhaustiva de todos los archivos. La responsabilidad intelectual permanece en el estudiante.
 
 ## Fuentes
 
