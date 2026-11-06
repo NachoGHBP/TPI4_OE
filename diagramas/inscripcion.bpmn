@@ -1,0 +1,195 @@
+<?xml version='1.0' encoding='utf-8'?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="SpartaDefinitions" targetNamespace="https://sparta-archery.example/academic">
+  <bpmn:message id="Solicitud" name="Solicitud de inscripción" />
+  <bpmn:process id="ProcesoInscripcion" isExecutable="false">
+    <bpmn:laneSet id="Lanes">
+      <bpmn:lane id="admin" name="Administración">
+        <bpmn:flowNodeRef>inicio</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>cargar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>comunicar</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="sistema" name="Sistema">
+        <bpmn:flowNodeRef>validar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>valido</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>reservar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>cupo</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>rechazo</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>unir</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>fin</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="inicio" name="Solicitud recibida">
+      <bpmn:outgoing>f1</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="msgStart" messageRef="Solicitud" />
+    </bpmn:startEvent>
+    <bpmn:userTask id="cargar" name="Verificar alumno y cargar solicitud">
+      <bpmn:incoming>f1</bpmn:incoming>
+      <bpmn:outgoing>f2</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="validar" name="Validar actividad, fechas y no superposición">
+      <bpmn:incoming>f2</bpmn:incoming>
+      <bpmn:outgoing>f3</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="valido" name="¿Datos válidos?">
+      <bpmn:incoming>f3</bpmn:incoming>
+      <bpmn:outgoing>f4</bpmn:outgoing>
+      <bpmn:outgoing>f5</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="reservar" name="Comprobar cupo y guardar inscripción en una transacción">
+      <bpmn:incoming>f4</bpmn:incoming>
+      <bpmn:outgoing>f6</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="cupo" name="¿Inscripción creada?">
+      <bpmn:incoming>f6</bpmn:incoming>
+      <bpmn:outgoing>f7</bpmn:outgoing>
+      <bpmn:outgoing>f8</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="rechazo" name="Preparar rechazo con motivo">
+      <bpmn:incoming>f5</bpmn:incoming>
+      <bpmn:incoming>f8</bpmn:incoming>
+      <bpmn:outgoing>f9</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="unir" name="">
+      <bpmn:incoming>f7</bpmn:incoming>
+      <bpmn:incoming>f9</bpmn:incoming>
+      <bpmn:outgoing>f10</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="comunicar" name="Comunicar resultado al solicitante">
+      <bpmn:incoming>f10</bpmn:incoming>
+      <bpmn:outgoing>f11</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="fin" name="Solicitud resuelta">
+      <bpmn:incoming>f11</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="f1" sourceRef="inicio" targetRef="cargar" />
+    <bpmn:sequenceFlow id="f2" sourceRef="cargar" targetRef="validar" />
+    <bpmn:sequenceFlow id="f3" sourceRef="validar" targetRef="valido" />
+    <bpmn:sequenceFlow id="f4" sourceRef="valido" targetRef="reservar" name="Sí">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">datos_validos = true</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="f5" sourceRef="valido" targetRef="rechazo" name="No">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">datos_validos = false</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="f6" sourceRef="reservar" targetRef="cupo" />
+    <bpmn:sequenceFlow id="f7" sourceRef="cupo" targetRef="unir" name="Sí">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">inscripcion_creada = true</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="f8" sourceRef="cupo" targetRef="rechazo" name="No">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">inscripcion_creada = false</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="f9" sourceRef="rechazo" targetRef="unir" />
+    <bpmn:sequenceFlow id="f10" sourceRef="unir" targetRef="comunicar" />
+    <bpmn:sequenceFlow id="f11" sourceRef="comunicar" targetRef="fin" />
+  </bpmn:process>
+  <bpmn:collaboration id="Colaboracion">
+    <bpmn:participant id="Externo" name="Alumno / familiar" />
+    <bpmn:participant id="Escuela" name="Sparta Archery" processRef="ProcesoInscripcion" />
+    <bpmn:messageFlow id="m1" sourceRef="Externo" targetRef="inicio" name="Solicitud" />
+    <bpmn:messageFlow id="m2" sourceRef="comunicar" targetRef="Externo" name="Resultado" />
+  </bpmn:collaboration>
+  <bpmndi:BPMNDiagram id="DiagramaInscripcion">
+    <bpmndi:BPMNPlane id="Plano" bpmnElement="Colaboracion">
+      <bpmndi:BPMNShape id="Externo_di" bpmnElement="Externo" isHorizontal="true">
+        <dc:Bounds x="50" y="65" width="1140" height="65" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Escuela_di" bpmnElement="Escuela" isHorizontal="true">
+        <dc:Bounds x="50" y="175" width="1140" height="410" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="admin_di" bpmnElement="admin" isHorizontal="true">
+        <dc:Bounds x="88" y="175" width="1102" height="160" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="sistema_di" bpmnElement="sistema" isHorizontal="true">
+        <dc:Bounds x="88" y="335" width="1102" height="250" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="inicio_di" bpmnElement="inicio">
+        <dc:Bounds x="150" y="237" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="cargar_di" bpmnElement="cargar">
+        <dc:Bounds x="220" y="215" width="170" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="validar_di" bpmnElement="validar">
+        <dc:Bounds x="400" y="385" width="160" height="85" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="valido_di" bpmnElement="valido">
+        <dc:Bounds x="590" y="402" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="reservar_di" bpmnElement="reservar">
+        <dc:Bounds x="690" y="385" width="175" height="85" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="cupo_di" bpmnElement="cupo">
+        <dc:Bounds x="895" y="402" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="rechazo_di" bpmnElement="rechazo">
+        <dc:Bounds x="700" y="500" width="165" height="65" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="unir_di" bpmnElement="unir">
+        <dc:Bounds x="990" y="402" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="comunicar_di" bpmnElement="comunicar">
+        <dc:Bounds x="990" y="215" width="165" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="fin_di" bpmnElement="fin">
+        <dc:Bounds x="1135" y="340" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="f1_di" bpmnElement="f1">
+        <di:waypoint x="186" y="255" />
+        <di:waypoint x="220" y="255" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f2_di" bpmnElement="f2">
+        <di:waypoint x="305" y="295" />
+        <di:waypoint x="305" y="427" />
+        <di:waypoint x="400" y="427" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f3_di" bpmnElement="f3">
+        <di:waypoint x="560" y="427" />
+        <di:waypoint x="590" y="427" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f4_di" bpmnElement="f4">
+        <di:waypoint x="640" y="427" />
+        <di:waypoint x="690" y="427" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f5_di" bpmnElement="f5">
+        <di:waypoint x="615" y="452" />
+        <di:waypoint x="615" y="532" />
+        <di:waypoint x="700" y="532" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f6_di" bpmnElement="f6">
+        <di:waypoint x="865" y="427" />
+        <di:waypoint x="895" y="427" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f7_di" bpmnElement="f7">
+        <di:waypoint x="945" y="427" />
+        <di:waypoint x="990" y="427" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f8_di" bpmnElement="f8">
+        <di:waypoint x="920" y="452" />
+        <di:waypoint x="920" y="532" />
+        <di:waypoint x="865" y="532" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f9_di" bpmnElement="f9">
+        <di:waypoint x="782" y="565" />
+        <di:waypoint x="782" y="578" />
+        <di:waypoint x="1015" y="578" />
+        <di:waypoint x="1015" y="452" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f10_di" bpmnElement="f10">
+        <di:waypoint x="1015" y="402" />
+        <di:waypoint x="1015" y="295" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f11_di" bpmnElement="f11">
+        <di:waypoint x="1155" y="255" />
+        <di:waypoint x="1174" y="255" />
+        <di:waypoint x="1174" y="358" />
+        <di:waypoint x="1171" y="358" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="m1_di" bpmnElement="m1">
+        <di:waypoint x="168" y="130" />
+        <di:waypoint x="168" y="237" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="m2_di" bpmnElement="m2">
+        <di:waypoint x="1080" y="215" />
+        <di:waypoint x="1080" y="130" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
