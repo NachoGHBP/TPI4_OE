@@ -1,0 +1,8 @@
+﻿ID,Titulo,Tipo,Estado_propuesto,Prioridad,Responsable,Semana,Evidencia
+HU-01,Inscribir alumnos sin exceder cupos,Funcionalidad,Por Hacer,Alta,DT,S7,Pendiente
+HU-02,Registrar y corregir asistencia con control,Funcionalidad,Por Hacer,Alta,DT,S8,Pendiente
+HU-03,Consultar reportes para tomar decisiones,Funcionalidad,Por Hacer,Media,DT,S8,Pendiente
+D-01,Revisar BPMN,Documentacion,Por Hacer,Alta,DT,Cierre académico,Pendiente de validación/publicación
+D-02,Validar historias y relaciones,Documentacion,Por Hacer,Alta,DT,Cierre académico,Pendiente de validación/publicación
+D-03,Publicar controles y declaración IA,Documentacion,Por Hacer,Alta,DT,Cierre académico,Pendiente de validación/publicación
+D-04,Revisar e integrar PR,Documentacion,Por Hacer,Alta,DT,Cierre académico,Pendiente de validación/publicación
